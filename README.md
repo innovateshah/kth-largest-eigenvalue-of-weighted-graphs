@@ -25,7 +25,7 @@ Generates a random symmetric `n × n` matrix with entries in `[0,1]` and zero di
 
 ### `H_ab(a, b)`
 
-Constructs a graph with six groups arranged around a hexagon, with group sizes
+Constructs the adjacency matrix for the graph with maximal 3rd largest eigenvalue as described by
 
 ```text
 a, b, a, b, a, b
@@ -154,24 +154,101 @@ df = sup.search_optimal(
 
 For a symmetric weighted matrix `A`, let `v_k` be the eigenvector corresponding to its k-th largest eigenvalue.
 
-Each optimization step applies
+Each optimization step essentially applies:
 
-[
+$$
 A \leftarrow A + \eta v_kv_k^T
-]
+$$
 
-where `η` is the learning rate.
+where `η` is the learning rate and A is reformed to be a weighted graph (0's on the diagonal and weighted on [0,1]). This process stops when either the number of iterations exceeds epochs, or is "close" to an unweighted adjacency matrix (created by flattening the weights of the weighted matrix to 0 or 1). The k-th largest eigenvalue of the flattened matrix graph determines its score. The search retains non-isomorphic graphs tied for the best score found.
 
-The matrix is then clipped to `[0,1]` and thresholded at `0.5`:
+##Results
 
-[
-A_{ij}^{binary} =
-\begin{cases}
-1 & A_{ij}>0.5\
-0 & A_{ij}\leq0.5
-\end{cases}
-]
+Here are the results found for n=7,10,13,16.
+n=7: $\lambda_k=1.24697960372=2\cos(2\pi/7)$
+Unique up to isomorphism.
+The $C_7$ graph (cyclic).
 
-The k-th largest eigenvalue of the resulting graph determines its score.
+n=10: $\lambda_k=2.2360679774997894$
+Unique up to isomorphism.
+Highly symmetric graph
+Adjacency matrix:
+$$
+[[0 0 0 0 0 1 1 1 0 1]
+ [0 0 0 1 1 0 0 1 1 0]
+ [0 0 0 0 1 1 1 0 1 0]
+ [0 1 0 0 1 0 0 1 0 1]
+ [0 1 1 1 0 0 0 0 1 0]
+ [1 0 1 0 0 0 1 0 0 1]
+ [1 0 1 0 0 1 0 0 1 0]
+ [1 1 0 1 0 0 0 0 0 1]
+ [0 1 1 0 1 0 1 0 0 0]
+ [1 0 0 1 0 1 0 1 0 0]]
+$$
 
-The search retains non-isomorphic graphs tied for the best score found.
+n=13: $\lambda_k=3.162522070908035$
+Unique up to isomorphism.
+Adjacency matrix:
+$$
+[[0 1 1 0 0 1 0 0 1 0 0 0 1]
+ [1 0 1 0 0 0 0 0 1 0 1 0 1]
+ [1 1 0 0 1 0 0 1 0 0 1 0 0]
+ [0 0 0 0 0 1 1 0 0 1 0 1 0]
+ [0 0 1 0 0 0 0 1 0 0 1 1 0]
+ [1 0 0 1 0 0 1 0 1 1 0 0 1]
+ [0 0 0 1 0 1 0 0 0 1 0 1 0]
+ [0 0 1 0 1 0 0 0 0 0 1 1 0]
+ [1 1 0 0 0 1 0 0 0 0 0 0 1]
+ [0 0 0 1 0 1 1 0 0 0 0 1 0]
+ [0 1 1 0 1 0 0 1 0 0 0 1 0]
+ [0 0 0 1 1 0 1 1 0 1 1 0 0]
+ [1 1 0 0 0 1 0 0 1 0 0 0 0]]
+$$
+
+
+n=16: $\lambda_k=4.162277660168379$
+NOT unique up to isomorphism.
+Adjacency matrices:
+$$
+[[0 1 0 0 1 0 0 1 0 1 0 0 1 0 1 0]
+ [1 0 1 0 0 0 0 1 0 1 0 1 1 0 0 1]
+ [0 1 0 0 0 0 0 0 1 1 1 1 0 0 0 1]
+ [0 0 0 0 1 1 1 0 0 0 1 0 0 1 1 0]
+ [1 0 0 1 0 1 1 1 0 0 0 0 1 0 1 0]
+ [0 0 0 1 1 0 1 0 0 0 1 0 0 1 1 0]
+ [0 0 0 1 1 1 0 0 1 0 1 0 0 1 1 0]
+ [1 1 0 0 1 0 0 0 0 1 0 0 1 0 1 0]
+ [0 0 1 0 0 0 1 0 0 0 1 1 0 1 0 1]
+ [1 1 1 0 0 0 0 1 0 0 0 1 1 0 0 1]
+ [0 0 1 1 0 1 1 0 1 0 0 1 0 1 0 1]
+ [0 1 1 0 0 0 0 0 1 1 1 0 0 1 0 1]
+ [1 1 0 0 1 0 0 1 0 1 0 0 0 0 1 0]
+ [0 0 0 1 0 1 1 0 1 0 1 1 0 0 0 0]
+ [1 0 0 1 1 1 1 1 0 0 0 0 1 0 0 0]
+ [0 1 1 0 0 0 0 0 1 1 1 1 0 0 0 0]]
+
+[[0 0 1 1 1 0 0 0 1 1 0 1 0 1 0 0]
+ [0 0 0 1 0 1 0 1 0 1 0 1 1 0 1 0]
+ [1 0 0 0 1 0 1 0 1 1 1 0 0 1 0 1]
+ [1 1 0 0 0 0 0 1 1 1 0 1 0 0 0 0]
+ [1 0 1 0 0 0 1 0 1 1 1 0 0 1 0 1]
+ [0 1 0 0 0 0 1 1 0 0 1 0 1 0 1 1]
+ [0 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1]
+ [0 1 0 1 0 1 0 0 0 1 0 1 1 0 1 0]
+ [1 0 1 1 1 0 0 0 0 1 0 1 0 1 0 0]
+ [1 1 1 1 1 0 0 1 1 0 0 1 0 0 0 0]
+ [0 0 1 0 1 1 1 0 0 0 0 0 1 1 1 1]
+ [1 1 0 1 0 0 0 1 1 1 0 0 1 0 1 0]
+ [0 1 0 0 0 1 1 1 0 0 1 1 0 0 1 1]
+ [1 0 1 0 1 0 1 0 1 0 1 0 0 0 0 1]
+ [0 1 0 0 0 1 1 1 0 0 1 1 1 0 0 1]
+ [0 0 1 0 1 1 1 0 0 0 1 0 1 1 1 0]]
+$$
+
+
+## Miscellaneous Notes
+
+I do not have complete confidence that this algorithm actually find the weighted graph with the largest kth eigenvalue. All largely reducing to the matrix we apply is different from the projection matrix. I suspect clipping to be largest source however
+
+When attempting to run the program, expect more than 60 seconds to run. n=16 case took ~60 seconds per graph optimization. When running, auto_search is recommended.
+
