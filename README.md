@@ -209,7 +209,6 @@ $$
 n=16: $\lambda_k=4.162277660168379$
 NOT unique up to isomorphism.
 Adjacency matrices:
-$$
 [[0 1 0 0 1 0 0 1 0 1 0 0 1 0 1 0]
  [1 0 1 0 0 0 0 1 0 1 0 1 1 0 0 1]
  [0 1 0 0 0 0 0 0 1 1 1 1 0 0 0 1]
@@ -226,7 +225,7 @@ $$
  [0 0 0 1 0 1 1 0 1 0 1 1 0 0 0 0]
  [1 0 0 1 1 1 1 1 0 0 0 0 1 0 0 0]
  [0 1 1 0 0 0 0 0 1 1 1 1 0 0 0 0]]
-
+Second found matrix: 
 [[0 0 1 1 1 0 0 0 1 1 0 1 0 1 0 0]
  [0 0 0 1 0 1 0 1 0 1 0 1 1 0 1 0]
  [1 0 0 0 1 0 1 0 1 1 1 0 0 1 0 1]
@@ -243,12 +242,11 @@ $$
  [1 0 1 0 1 0 1 0 1 0 1 0 0 0 0 1]
  [0 1 0 0 0 1 1 1 0 0 1 1 1 0 0 1]
  [0 0 1 0 1 1 1 0 0 0 1 0 1 1 1 0]]
-$$
 
 
 ## Miscellaneous Notes
 
-I do not have complete confidence that this algorithm actually find the weighted graph with the largest kth eigenvalue. All largely reducing to the matrix we apply is different from the projection matrix. I suspect clipping to be largest source however
+I do not have complete confidence that this algorithm actually find the weighted graph with the largest kth eigenvalue. All largely reducing to the matrix we apply is different from the projection matrix. I suspect clipping to be largest source. Fixes might include a more ML optimizer inspired method using tools like SDG or even possibly Adam and Muon.
 
 When attempting to run the program, expect more than 60 seconds to run. n=16 case took ~60 seconds per graph optimization. When running, auto_search is recommended.
 
