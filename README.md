@@ -162,18 +162,20 @@ $$
 
 where `η` is the learning rate and A is reformed to be a weighted graph (0's on the diagonal and weighted on [0,1]). This process stops when either the number of iterations exceeds epochs, or is "close" to an unweighted adjacency matrix (created by flattening the weights of the weighted matrix to 0 or 1). The k-th largest eigenvalue of the flattened matrix graph determines its score. The search retains non-isomorphic graphs tied for the best score found.
 
-##Results
+## Results
 
 Here are the results found for n=7,10,13,16.
 n=7: $\lambda_k=1.24697960372=2\cos(2\pi/7)$
 Unique up to isomorphism.
 The $C_7$ graph (cyclic).
+Exhaustively checked using list of all adjacency matrices with 7 nodes using nauty/geng.
+
 
 n=10: $\lambda_k=2.2360679774997894$
 Unique up to isomorphism.
 Highly symmetric graph
 Adjacency matrix:
-$$
+
 [[0 0 0 0 0 1 1 1 0 1]
  [0 0 0 1 1 0 0 1 1 0]
  [0 0 0 0 1 1 1 0 1 0]
@@ -184,12 +186,12 @@ $$
  [1 1 0 1 0 0 0 0 0 1]
  [0 1 1 0 1 0 1 0 0 0]
  [1 0 0 1 0 1 0 1 0 0]]
-$$
+
 
 n=13: $\lambda_k=3.162522070908035$
 Unique up to isomorphism.
 Adjacency matrix:
-$$
+
 [[0 1 1 0 0 1 0 0 1 0 0 0 1]
  [1 0 1 0 0 0 0 0 1 0 1 0 1]
  [1 1 0 0 1 0 0 1 0 0 1 0 0]
@@ -203,12 +205,12 @@ $$
  [0 1 1 0 1 0 0 1 0 0 0 1 0]
  [0 0 0 1 1 0 1 1 0 1 1 0 0]
  [1 1 0 0 0 1 0 0 1 0 0 0 0]]
-$$
 
 
 n=16: $\lambda_k=4.162277660168379$
 NOT unique up to isomorphism.
 Adjacency matrices:
+
 [[0 1 0 0 1 0 0 1 0 1 0 0 1 0 1 0]
  [1 0 1 0 0 0 0 1 0 1 0 1 1 0 0 1]
  [0 1 0 0 0 0 0 0 1 1 1 1 0 0 0 1]
@@ -225,7 +227,9 @@ Adjacency matrices:
  [0 0 0 1 0 1 1 0 1 0 1 1 0 0 0 0]
  [1 0 0 1 1 1 1 1 0 0 0 0 1 0 0 0]
  [0 1 1 0 0 0 0 0 1 1 1 1 0 0 0 0]]
+
 Second found matrix: 
+
 [[0 0 1 1 1 0 0 0 1 1 0 1 0 1 0 0]
  [0 0 0 1 0 1 0 1 0 1 0 1 1 0 1 0]
  [1 0 0 0 1 0 1 0 1 1 1 0 0 1 0 1]
@@ -248,5 +252,8 @@ Second found matrix:
 
 I do not have complete confidence that this algorithm actually find the weighted graph with the largest kth eigenvalue. All largely reducing to the matrix we apply is different from the projection matrix. I suspect clipping to be largest source. Fixes might include a more ML optimizer inspired method using tools like SDG or even possibly Adam and Muon.
 
+All graphs optimized consistently have kth eigenvalue larger than the maximal kth eigenvalue for smaller cases (at least for k=3).
+
 When attempting to run the program, expect more than 60 seconds to run. n=16 case took ~60 seconds per graph optimization. When running, auto_search is recommended.
 
+Exhaustive checking seems basically impossible for n>14 even using bounds on edges .
